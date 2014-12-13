@@ -9,6 +9,10 @@ myApp.factory('Friends', ['$rootScope', function($rootScope) {
     { id: 3, name: 'Ash Ketchum' }
   ];
 
+  var user = function(){
+    return localStorage.getItem('singedIn');
+  };
+
   return {
     all: function() {
       return friends;
@@ -16,6 +20,7 @@ myApp.factory('Friends', ['$rootScope', function($rootScope) {
     get: function(friendId) {
       // Simple index lookup
       return friends[friendId];
-    }
+    },
+    user : user
   };
 }]);
