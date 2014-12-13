@@ -3,7 +3,7 @@
   Each tab's child <ion-nav-view> directive will have its own 
   navigation history that also transitions its views in and out.
 -->
-<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+<ion-tabs class="tabs-icon-top tabs-color-active-positive" ng-controller="MainCtrl">
 
 
   <!-- Dashboard Tab -->
@@ -12,14 +12,14 @@
   </ion-tab>
 
 
-  <!-- Friends Tab -->
-  <ion-tab title="Friends" icon="icon ion-heart" href="#/tab/friends">
+  <!-- Graph Tab -->
+  <ion-tab title="Graph" icon="icon ion-stats-bars" href="#/tab/friends">
     <ion-nav-view name="tab-friends"></ion-nav-view>
   </ion-tab>
 
 
-  <!-- Account Tab -->
-  <ion-tab title="Account" icon="icon ion-gear-b" href="#/tab/account">
+  <!-- Log Out Tabs -->
+  <ion-tab title="Log Out" icon="icon ion-power" href="#/tab/account">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
 

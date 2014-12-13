@@ -1,10 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
 var myApp = angular.module('starter', ['ionic'])
 
 .run(function($ionicPlatform) {
@@ -83,7 +76,12 @@ var myApp = angular.module('starter', ['ionic'])
 });
 
 
-myApp.controller('AccountCtrl', ['$scope', function($scope) {
+myApp.controller('AccountCtrl', ['$scope', '$state', '$log', function($scope, $state, $log) {
+
+	//automatic logout
+	$log.log('User Logged Out!');
+	$state.go('tab.dash');
+
 }]);
 myApp.controller('DashCtrl', ['$scope', function($scope) {
 
@@ -93,6 +91,15 @@ myApp.controller('FriendDetailCtrl', ['$scope', '$stateParams', 'Friends', funct
 }]);
 myApp.controller('FriendsCtrl', ['$scope', 'Friends', function($scope, Friends) {
   $scope.friends = Friends.all();
+}]);
+myApp.controller('MainCtrl', ['$scope', '$log',  function($scope, $log) {
+
+	$scope.logout = function(){
+		//Log out logic will go here
+		$log.log('User Logout Clicked!');
+		$state.go('tab.dash');
+	};
+
 }]);
 myApp.factory('Friends', ['$rootScope', function($rootScope) {
   // Might use a resource here that returns a JSON array
