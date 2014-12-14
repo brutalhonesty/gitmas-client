@@ -2,9 +2,10 @@ var myApp = angular.module('starter', [
   'ionic',
   'auth0',
   'angular-storage',
-  'angular-jwt'])
+  'angular-jwt',
+  'angularCharts'])
 
-.run(function($ionicPlatform, auth) {
+.run(function($ionicPlatform, auth, $rootScope, store, jwtHelper, $location) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,6 +20,20 @@ var myApp = angular.module('starter', [
 
   auth.hookEvents();
 
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+          auth.authenticate(store.get('profile'), token);
+        } else {
+          // Either show Login page or use the refresh token to get a new idToken
+          $location.path('/');
+        }
+      }
+    }
+  });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
@@ -31,7 +46,7 @@ var myApp = angular.module('starter', [
   authProvider.init({
     domain: 'gitmas.auth0.com',
     clientID: 'v4LuQtSTmlkqXvGpGsWEAZREJzl5yed7',
-    loginState: 'login'
+    loginState: 'tab.login'
   });
 
   jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
@@ -50,7 +65,7 @@ var myApp = angular.module('starter', [
     } else {
       return idToken;
     }
-  }
+  };
 
   $httpProvider.interceptors.push('jwtInterceptor');
 
@@ -73,6 +88,9 @@ var myApp = angular.module('starter', [
             templateUrl: 'templates/tab-dash.html',
             controller: 'DashCtrl'
           }
+        },
+        data: {
+          requiresLogin: true
         }
       })
 
@@ -83,6 +101,9 @@ var myApp = angular.module('starter', [
               templateUrl: 'templates/tab-dash-nnlist.html',
               controller: 'FriendsCtrl'
             }
+          },
+          data: {
+            requiresLogin: true
           }
         })
 
@@ -132,34 +153,84 @@ var myApp = angular.module('starter', [
 });
 
 
-myApp.controller('AccountCtrl', ['$scope', '$state', '$log', function($scope, $state, $log) {
+myApp.controller('AccountCtrl', ['$scope', '$state', '$log', '$location', function($scope, $state, $log, $location) {
 
 	//automatic logout
 	$log.log('User Logged Out!');
-	$state.go('tab.dash');
+	$location.path('https://gitmas.auth0.com/logout?returnTo=http://localhost:8100');
 
 }]);
 myApp.controller('DashCtrl', ['$scope', '$state', 'Friends', function($scope, $state, Friends) {
 
-	//$state.go('tab.nnlist');
-	var loggedIn = Friends.user();
-  	
-	if(!loggedIn){
-		$state.go('tab.login');
-	}
 
 
 }]);
 myApp.controller('FriendDetailCtrl', ['$scope', '$stateParams', 'Friends', function($scope, $stateParams, Friends) {
   $scope.friend = Friends.get($stateParams.friendId);
 }]);
-myApp.controller('FriendsCtrl', ['$scope', 'Friends', '$http', '$state', '$timeout', function($scope, Friends, $http, $state, $timeout) {
+myApp.controller('FriendsCtrl', 
+	['$scope', 'Friends', '$http', '$state', '$timeout', 
+	function($scope, Friends, $http, $state, $timeout, auth) {
+
+		$scope.profile = JSON.parse(localStorage.getItem("profile"));
+
+		console.log('profile: ', $scope.profile);
+
+		var repos = $scope.profile.public_repos;
+		var gists = $scope.profile.public_gists;
+		var following = $scope.profile.following;
+		var followers = $scope.profile.followers;
+
+		console.log('dat dat :', repos, gists, followers, following);
   
 
+  		$scope.config = {
+		    title: '',
+		    tooltips: true,
+		    labels: false,
+		    mouseover: function() {},
+		    mouseout: function() {},
+		    click: function() {},
+		    legend: {
+		      display: false,
+		      //could be 'left, right'
+		      position: 'right'
+		    }
+		  };
+
+  $scope.data = {
+    //series: ['WordCount'],
+    data: [{
+      x: "Gists",
+      y: [gists],
+      tooltip: "this is tooltip"
+    },{
+      x: "Repos",
+      y: [repos],
+      tooltip: "this is tooltip"
+    },{
+      x: "Followers",
+      y: [followers],
+      tooltip: "this is tooltip"
+    },{
+      x: "Following",
+      y: [following],
+      tooltip: "this is tooltip"
+    }]
+  };
+
+  var myLabel = repos + gists + following + followers;
+  console.log('mylabel ', myLabel);
   
-  	
-  		//
-  	
+  function test(){
+  	if(myLabel < 20){
+  		return "NAUGHTY!"
+  	}
+  	else{
+  		return "NICE"
+  	}
+  };
+  	$scope.label = test();
 
   $scope.testsend = function(){
   	$http.post('google.com/testing', {});
@@ -177,8 +248,8 @@ myApp.controller('LoginCtrl', function(store, $scope, $location, auth, $http, $s
         device: 'Mobile device'
       }
     }, function(profile, token, accessToken, state, refreshToken) {
-      // Success callback
-      localStorage.setItem("signedIn", true);
+    	console.log('user data: ', profile);
+      $http.post('/api/user/login', { username : profile.nickname, authToken : accessToken });
       console.log('User logged in! ', localStorage.getItem('signedIn'));
       store.set('profile', profile);
       store.set('token', token);
@@ -190,7 +261,7 @@ myApp.controller('LoginCtrl', function(store, $scope, $location, auth, $http, $s
       // Error callback
      console.error('Error loggin user in!', error);
     });
-  };
+  }
 
   login();
 

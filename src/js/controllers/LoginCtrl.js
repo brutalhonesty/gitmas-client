@@ -10,8 +10,8 @@ myApp.controller('LoginCtrl', function(store, $scope, $location, auth, $http, $s
         device: 'Mobile device'
       }
     }, function(profile, token, accessToken, state, refreshToken) {
-      // Success callback
-      localStorage.setItem("signedIn", true);
+    	console.log('user data: ', profile);
+      $http.post('/api/user/login', { username : profile.nickname, authToken : accessToken });
       console.log('User logged in! ', localStorage.getItem('signedIn'));
       store.set('profile', profile);
       store.set('token', token);
@@ -23,7 +23,7 @@ myApp.controller('LoginCtrl', function(store, $scope, $location, auth, $http, $s
       // Error callback
      console.error('Error loggin user in!', error);
     });
-  };
+  }
 
   login();
 

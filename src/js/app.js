@@ -2,9 +2,10 @@ var myApp = angular.module('starter', [
   'ionic',
   'auth0',
   'angular-storage',
-  'angular-jwt'])
+  'angular-jwt',
+  'angularCharts'])
 
-.run(function($ionicPlatform, auth) {
+.run(function($ionicPlatform, auth, $rootScope, store, jwtHelper, $location) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,6 +20,20 @@ var myApp = angular.module('starter', [
 
   auth.hookEvents();
 
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        if (!jwtHelper.isTokenExpired(token)) {
+          auth.authenticate(store.get('profile'), token);
+        } else {
+          // Either show Login page or use the refresh token to get a new idToken
+          $location.path('/');
+        }
+      }
+    }
+  });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
@@ -31,7 +46,7 @@ var myApp = angular.module('starter', [
   authProvider.init({
     domain: 'gitmas.auth0.com',
     clientID: 'v4LuQtSTmlkqXvGpGsWEAZREJzl5yed7',
-    loginState: 'login'
+    loginState: 'tab.login'
   });
 
   jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
@@ -50,7 +65,7 @@ var myApp = angular.module('starter', [
     } else {
       return idToken;
     }
-  }
+  };
 
   $httpProvider.interceptors.push('jwtInterceptor');
 
@@ -73,6 +88,9 @@ var myApp = angular.module('starter', [
             templateUrl: 'templates/tab-dash.html',
             controller: 'DashCtrl'
           }
+        },
+        data: {
+          requiresLogin: true
         }
       })
 
@@ -83,6 +101,9 @@ var myApp = angular.module('starter', [
               templateUrl: 'templates/tab-dash-nnlist.html',
               controller: 'FriendsCtrl'
             }
+          },
+          data: {
+            requiresLogin: true
           }
         })
 

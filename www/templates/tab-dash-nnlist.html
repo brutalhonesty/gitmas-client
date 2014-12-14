@@ -1,11 +1,17 @@
-<ion-view title="Friends">
+<ion-view>
+	<style>
+		#chart{
+		    float:left;
+		    margin:0 5%;
+			width: 90%;
+			height:400px;
+		}
+	</style>
   <ion-content>
-  <p ng-click="testsend()">TESTING</p>
     <ion-list>
-      <ion-item ng-repeat="friend in friends" type="item-text-wrap" href="#/tab/friend/{{friend.id}}">
-        {{friend.name}}
-
-      </ion-item>
+    <h1 style="text-align:center;">{{label}}</h1>
+      <div ac-chart="'bar'" ac-data="data" ac-config="config" id='chart' class='chart'></div>
+    
     </ion-list>
   </ion-content>
 </ion-view>
