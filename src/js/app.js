@@ -3,9 +3,10 @@ var myApp = angular.module('starter', [
   'auth0',
   'angular-storage',
   'angular-jwt',
-  'angularCharts'])
+  'angularCharts',
+  'btford.socket-io'])
 
-.run(function($ionicPlatform, auth, $rootScope, store, jwtHelper, $location) {
+.run(['$ionicPlatform', 'auth', '$rootScope', 'store', 'jwtHelper', '$location', 'progressSocket', function($ionicPlatform, auth, $rootScope, store, jwtHelper, $location, progressSocket) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,7 +21,11 @@ var myApp = angular.module('starter', [
 
   auth.hookEvents();
 
-  $rootScope.$on('$locationChangeStart', function() {
+  $rootScope.$on('$locationChangeStart', function (newUrl, oldUrl) {
+    console.log(newUrl);
+    if(newUrl === '/tab/graph') {
+      progressSocket.emit('getProgress', {id: store.get('queueId')});
+    }
     if (!auth.isAuthenticated) {
       var token = store.get('token');
       if (token) {
@@ -34,7 +39,7 @@ var myApp = angular.module('starter', [
     }
   });
 
-})
+}])
 
 .config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 

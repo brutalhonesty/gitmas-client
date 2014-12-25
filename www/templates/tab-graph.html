@@ -1,32 +1,39 @@
 <ion-view>
   <ion-content>
-      <div class="card">
+      <div class="list list-inset">
         <div class="item item-divider">
           Personal
         </div>
-        <div class="item item-text-wrap">
-        </div>
+        <a href="javascript:void(0);" class="item" ng-if="progress">
+          <progress max="100" value="{{progress}}"></progress>
+        </a>
+        <a href="javascript:void(0);" class="item" ng-if="user &amp;&amp; !progress">
+          {{user.username}}: {{user.percentage}}
+        </a>
       </div>
-      <div class="card">
+      <div class="list list-inset">
         <div class="item item-divider">
           State
         </div>
-        <div class="item item-text-wrap">
-        </div>
+        <a href="javascript:void(0);" ng-click="viewUser($index)" class="item" ng-repeat="rank in ranks | orderBy: 'rank.percentage'">
+          {{rank.username}}: {{rank.percentage}}
+        </a>
       </div>
-      <div class="card">
+      <div class="list list-inset">
         <div class="item item-divider">
           Country
         </div>
-        <div class="item item-text-wrap">
-        </div>
+        <a href="javascript:void(0);" ng-click="viewUser($index)" class="item" ng-repeat="rank in ranks | orderBy: 'rank.percentage'">
+          {{rank.username}}: {{rank.percentage}}
+        </a>
       </div>
-      <div class="card">
+      <div class="list list-inset">
         <div class="item item-divider">
           Global
         </div>
-        <div class="item item-text-wrap">
-        </div>
+        <a href="javascript:void(0);" ng-click="viewUser($index)" class="item" ng-repeat="rank in ranks | orderBy: 'rank.percentage'">
+          {{rank.username}}: {{rank.percentage}}
+        </a>
       </div>
   </ion-content>
 </ion-view>

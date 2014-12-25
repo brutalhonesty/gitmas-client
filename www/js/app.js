@@ -1,4 +1,4 @@
-var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angular-jwt', 'ngGeolocation'])
+var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angular-jwt', 'ngGeolocation', 'btford.socket-io', 'firebase'])
 .config(['$stateProvider', '$urlRouterProvider', 'authProvider', '$httpProvider', 'jwtInterceptorProvider',
   function($stateProvider, $urlRouterProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 
@@ -63,7 +63,7 @@ var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angu
     };
 
     $httpProvider.interceptors.push('jwtInterceptor');
-}]).run(['$ionicPlatform', 'auth', '$rootScope', 'store', 'jwtHelper', '$location', function($ionicPlatform, auth, $rootScope, store, jwtHelper, $location) {
+}]).run(['$ionicPlatform', 'auth', '$rootScope', 'store', 'jwtHelper', '$state', function ($ionicPlatform, auth, $rootScope, store, jwtHelper, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -76,7 +76,7 @@ var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angu
     }
   });
   auth.hookEvents();
-  $rootScope.$on('$locationChangeStart', function() {
+  $rootScope.$on('$locationChangeStart', function (event) {
     if (!auth.isAuthenticated) {
       var token = store.get('token');
       if (token) {
@@ -84,9 +84,9 @@ var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angu
           auth.authenticate(store.get('profile'), token);
         } else {
           // Either show Login page or use the refresh token to get a new idToken
-          $location.path('/login');
+          $state.go('login');
         }
       }
     }
   });
-}]);
+}]).value('FIRE_URL', 'https://sizzling-inferno-2672.firebaseio.com');
