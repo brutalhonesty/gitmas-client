@@ -26,6 +26,18 @@ var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angu
         requiresLogin: true
       }
     })
+    .state('tab.user', {
+      url: '/user',
+      views: {
+        'tab-user': {
+          templateUrl: 'templates/tab-user.html',
+          controller: 'UserCtrl'
+        }
+      },
+      data: {
+        requiresLogin: true
+      }
+    })
     .state('tab.logout', {
       url: '/logout',
       views: {
