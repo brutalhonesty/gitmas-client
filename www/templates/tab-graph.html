@@ -1,18 +1,26 @@
 <ion-view>
-  <ion-content>
-      <div class="list list-inset">
-        <div class="item item-divider">
-          Users
-        </div>
-        <a href="javascript:void(0);" class="item" ng-if="progress">
-          <progress max="100" value="{{progress}}"></progress>
-        </a>
-        <a href="javascript:void(0);" class="item" ng-click="showUser()" ng-if="user &amp;&amp; !progress">
-          {{rank + 1}} {{user.username}}: {{100 - user.percentage}}
-        </a>
-        <a href="javascript:void(0);" ng-click="viewUser($index)" class="item" ng-repeat="rank in ranks | filter: 'rank.username !== user.username'">
-          {{$index + 1}} {{rank.username}}: {{100 - rank.percentage}}
-        </a>
+  <div class="bar bar-header bar-dark">
+    <h1 class="title">Global Ranking</h1>
+  </div>
+  <!-- Use ion-slide-box when we have more than one list. -->
+  <ion-content class="has-header">
+    <ion-refresher
+      on-refresh="doRefresh()"
+      on-pulling="checkLastRefreshed()">
+    </ion-refresher>
+    <div class="list list-inset">
+      <div class="item item-divider">
+        How Nice Are You?
       </div>
+      <a href="javascript:void(0);" class="item item-text-wrap" ng-if="progress">
+        <progress max="100" value="{{progress}}"></progress>
+      </a>
+      <a href="javascript:void(0);" class="item item-text-wrap" ng-click="viewUser(user.username)" ng-if="user &amp;&amp; !progress">
+        {{rank + 1}}. {{user.username}}: {{100 - user.percentage}}%
+      </a>
+      <a href="javascript:void(0);" ng-click="viewUser(rank.username)" class="item item-text-wrap" ng-repeat="rank in ranks">
+        {{$index + 1}}. {{rank.username}}: {{100 - rank.percentage}}%
+      </a>
+    </div>
   </ion-content>
 </ion-view>

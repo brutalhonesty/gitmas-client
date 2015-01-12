@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.myapp203415" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.myapp203415" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Gitmas</name>
   <description>
-        Naughty or Nice Rankings based on Commit messages.
-    </description>
+      Naughty or Nice Rankings based on Commit messages.
+  </description>
   <author email="sparky1010+github@gmail.com" href="https://github.com/brutalhonesty">
-      Adam Schodde
-    </author>
+    Adam Schodde
+  </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="BackupWebStorage" value="none"/>
+  <preference name="orientation" value="portrait" />
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
   <feature name="InAppBrowser">
     <param name="ios-package" value="CDVInAppBrowser" />
     <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
-</feature>
+  </feature>
 </widget>

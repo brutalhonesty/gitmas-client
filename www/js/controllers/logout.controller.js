@@ -1,4 +1,4 @@
-myApp.controller('LogoutCtrl', ['$log', '$scope', 'auth', 'store', 'socket', function ($log, $scope, auth, store, socket) {
+myApp.controller('LogoutCtrl', ['$log', '$scope', 'auth', 'store', 'socket', '$state', function ($log, $scope, auth, store, socket, $state) {
   //automatic logout
   $log.log('User Logged Out!');
   auth.signout();
@@ -6,4 +6,5 @@ myApp.controller('LogoutCtrl', ['$log', '$scope', 'auth', 'store', 'socket', fun
   store.remove('profile');
   store.remove('token');
   $scope.auth = auth;
+  $state.go('login', {}, {relative: false});
 }]);

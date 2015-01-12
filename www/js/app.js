@@ -1,4 +1,4 @@
-var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angular-jwt', 'ngGeolocation', 'btford.socket-io', 'firebase'])
+var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angular-jwt', 'ngGeolocation', 'btford.socket-io', 'firebase', 'nvd3'])
 .config(['$stateProvider', '$urlRouterProvider', 'authProvider', '$httpProvider', 'jwtInterceptorProvider',
   function($stateProvider, $urlRouterProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 
@@ -27,7 +27,7 @@ var myApp = angular.module('gitmas', ['ionic', 'auth0', 'angular-storage', 'angu
       }
     })
     .state('tab.user', {
-      url: '/user',
+      url: '/user/:username',
       views: {
         'tab-user': {
           templateUrl: 'templates/tab-user.html',
